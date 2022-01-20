@@ -1,8 +1,5 @@
 import {useEffect, useState} from 'react'
-import logo from './logo.svg'
 import './App.css'
-import {Button} from "antd";
-import {io} from "socket.io-client";
 import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
 import {routes} from "./constants/routes";
 import {Lobby} from "./pages/Lobby";
