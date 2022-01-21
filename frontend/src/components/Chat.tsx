@@ -32,7 +32,7 @@ export const Chat: FC<Props> = () => {
                 <List
                     dataSource={messages}
                     itemLayout="horizontal"
-                    renderItem={props => <Comment avatar={<Jdenticon value={props.sender} size={50}/>}
+                    renderItem={props => <Comment avatar={props.system? null : <Jdenticon value={props.sender} size={50}/>}
                                                   author={props.sender}
                                                   datetime={props.time} content={<p>{props.text}</p>}/>}
                 />

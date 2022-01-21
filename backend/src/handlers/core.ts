@@ -1,22 +1,29 @@
 import {Handler} from "../types";
-import {log} from "../logger";
+import {logToRoom} from "../logger";
+import roomManager from "../logic/RoomManager";
 
-export const connectedUsers = {
 
-}
-export const coreHandler:Handler = (io, socket) => {
-  log(`Connected: ${socket.id}`)
+export const coreHandler: Handler = (io, socket) => {
+  const log = logToRoom(io,socket.user.room )
 
   socket.on('disconnect', () => {
-    log(`Disconnected: ${socket.id}`);
-    connectedUsers[socket.user.username] = null
-    // socket.leave()
+    log(`${socket.user.username} left`);
+    socket.leave(socket.user.room)
+    const room = roomManager.getRoom(socket.user.room)
+    if(!room) return
+    room.removeUser(socket.user)
+    if (room.isEmpty()) {
+      roomManager.deleteRoom(room.name)
+    }
   });
 
   socket.on('join', (roomId) => {
-    log(`${socket.user.username} joining ${roomId}`);
+    log(`${socket.user.username} joined`);
     socket.join(roomId);
-    connectedUsers[socket.user.username] = socket
+    if (!roomManager.getRoom(roomId)) {
+      roomManager.createRoom(roomId)
+    }
+    roomManager.getRoom(roomId).joinUser({...socket.user, socket:socket})
   })
 
 }

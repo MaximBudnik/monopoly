@@ -4,16 +4,20 @@ import {ClientToServerEvents, InterServerEvents, ServerToClientEvents, SocketDat
 export type User = {
   username: string
   id: string
+  room: string
 }
 
 export type Message = {
   sender: string;
   time: string;
   text: string;
+  system?:boolean
 }
 
-export type Handler = (io: Server<ClientToServerEvents, ServerToClientEvents, InterServerEvents, SocketData>,
-                       socket: Socket<ClientToServerEvents, ServerToClientEvents, InterServerEvents, SocketData> & {user:{
-                           username: string
-                           id: string
-                         }}) => void
+export type TypedSocket = Socket<ClientToServerEvents, ServerToClientEvents, InterServerEvents, SocketData>
+
+export type UserWithSocket = User & { socket: TypedSocket }
+
+export type TypedServer = Server<ClientToServerEvents, ServerToClientEvents, InterServerEvents, SocketData>
+
+export type Handler = (io: TypedServer, socket: TypedSocket & { user: User }) => void

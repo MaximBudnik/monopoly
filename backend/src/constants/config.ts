@@ -1,3 +1,4 @@
 export const config = {
-  jwtSecret: 'secret'
+  jwtSecret: 'secret',
+  reservedName: 'INFO'
 }

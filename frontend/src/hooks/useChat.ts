@@ -6,7 +6,6 @@ import {config} from "../constants/config";
 export const useChat = () => {
     const [messages, setMessages] = useState<Array<Message>>([])
 
-
     useEffect(() => {
         subscribeToChat((message: Message) => {
             if (messages.length > config.maxChatMessages) messages.shift()

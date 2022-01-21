@@ -19,7 +19,7 @@ export const Lobby: FC = () => {
     const navigate = useNavigate();
 
     const onFinish = async (values: { username: string, room: string }) => {
-        const token = await (await getToken(values.username)).json()
+        const token = await (await getToken(values.username, values.room)).json()
         sessionStorage.setItem('token', token)
         const user: { username: string, id: string } = jwt(token)
         sessionStorage.setItem('username', user.username)

@@ -4,14 +4,18 @@ import {Server} from "socket.io";
 import {ClientToServerEvents, InterServerEvents, ServerToClientEvents, SocketData} from "./socketSchema";
 import {coreHandler} from "./handlers/core";
 import {getToken, verifyToken} from "./auth";
-import {log} from "./logger";
 import {chatHandler} from "./handlers/chat";
+
 const cors = require('cors');
 
 const app = express();
 app.use(cors())
-app.get('/getToken/:username', (req, res) => {
-  res.json(getToken(req.params.username))
+app.get('/getToken/:room/:username', (req, res) => {
+  try {
+    res.json(getToken(req.params.username, req.params.room))
+  } catch (e) {
+    res.status(400).json(e)
+  }
 })
 
 const httpServer = createServer(app);
@@ -30,11 +34,9 @@ io.use((socket, next) => {
     socket.user = verifyToken(socket.handshake.auth.token);
     next();
   } catch (e) {
-    log(e)
     next(new Error('Authentication error'));
   }
 })
-
 
 
 const onConnection = (socket) => {
