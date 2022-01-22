@@ -1,4 +1,6 @@
 import {Room} from "./Room";
+import {sendFieldToRoom} from "../handlers/field";
+import {TypedServer} from "../types";
 
 
 interface IRoomManager {
@@ -10,16 +12,20 @@ interface IRoomManager {
 }
 
 
-class RoomManager implements IRoomManager {
+export class RoomManager implements IRoomManager {
+
+  private readonly _io: TypedServer
+
+  constructor(io: TypedServer) {
+    this._io = io;
+  }
 
   createRoom = name => {
     if (this[name]) throw new Error('Room is already created')
-    this[name] = new Room(name)
+    this[name] = new Room(name, sendFieldToRoom(this._io, name))
   };
 
   getRoom = name => this[name] as Room
 
   deleteRoom = name => this[name] = undefined
 }
-
-export default new RoomManager()

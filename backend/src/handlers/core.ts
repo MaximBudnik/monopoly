@@ -1,10 +1,10 @@
 import {Handler} from "../types";
 import {logToRoom} from "../logger";
-import roomManager from "../logic/RoomManager";
 
 
-export const coreHandler: Handler = (io, socket) => {
+export const coreHandler: Handler = (io, socket,roomManager) => {
   const log = logToRoom(io,socket.user.room )
+
 
   socket.on('disconnect', () => {
     log(`${socket.user.username} left`);

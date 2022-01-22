@@ -5,6 +5,8 @@ import {ClientToServerEvents, InterServerEvents, ServerToClientEvents, SocketDat
 import {coreHandler} from "./handlers/core";
 import {getToken, verifyToken} from "./auth";
 import {chatHandler} from "./handlers/chat";
+import {startGameHandler} from "./handlers/startGame";
+import {RoomManager} from "./logic/RoomManager";
 
 const cors = require('cors');
 
@@ -38,10 +40,12 @@ io.use((socket, next) => {
   }
 })
 
+const roomManager = new RoomManager(io)
 
 const onConnection = (socket) => {
-  coreHandler(io, socket);
-  chatHandler(io, socket);
+  coreHandler(io, socket, roomManager);
+  chatHandler(io, socket, roomManager);
+  startGameHandler(io, socket, roomManager);
 }
 
 io.on("connection", onConnection);

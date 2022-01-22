@@ -2,7 +2,7 @@ import {FC, useEffect, useRef, useState} from "react";
 import {List, Comment, Form, Input, Button, Typography} from "antd";
 import {useChat} from "../hooks/useChat";
 import {toSvg} from "jdenticon";
-import {Jdenticon} from "./Icon";
+import {AvatarIcon} from "./AvatarIcon";
 
 type Props = {}
 
@@ -32,7 +32,7 @@ export const Chat: FC<Props> = () => {
                 <List
                     dataSource={messages}
                     itemLayout="horizontal"
-                    renderItem={props => <Comment avatar={props.system? null : <Jdenticon value={props.sender} size={50}/>}
+                    renderItem={props => <Comment avatar={props.system? null : <AvatarIcon value={props.sender} size={50}/>}
                                                   author={props.sender}
                                                   datetime={props.time} content={<p>{props.text}</p>}/>}
                 />

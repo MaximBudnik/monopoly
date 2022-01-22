@@ -1,4 +1,4 @@
 export const config = {
   jwtSecret: 'secret',
-  reservedName: 'INFO'
+  gameDuration: 45 //min
 }
