@@ -3,6 +3,7 @@ import {useField} from "../hooks/useField";
 import {FieldCard, Orientation} from "./FieldCard";
 import styled from "styled-components";
 import {geekblue, lime, magenta, red} from "@ant-design/colors";
+import {DiceRoller} from "./DiceRoller";
 
 type Props = {}
 
@@ -22,8 +23,8 @@ const Grid = styled.div`
     "a32 a32 a0 a0 a0 a0 a0 a0 a0 a0 a0 a20 a20"
     "a31 a31 a30 a29 a28 a27 a26 a25 a24 a23 a22 a21 a21"
     "a31 a31 a30 a29 a28 a27 a26 a25 a24 a23 a22 a21 a21";
-  //grid-template-rows: repeat(auto-fill, 1fr);
-  //grid-template-columns: repeat(auto-fill, 1fr);
+  grid-template-rows: repeat(13, 1fr);
+  grid-template-columns: repeat(13, 1fr);
   grid-gap: 4px;
   height: 100%;
   width: 100%;
@@ -35,6 +36,9 @@ export const Field: FC<Props> = (props) => {
     console.log(field)
     return (
         <Grid>
+            <div style={{gridArea: 'a0'}}>
+                <DiceRoller/>
+            </div>
             {field?.map((card, i) => {
                 let orientation: Orientation
                 let idx = i + 1

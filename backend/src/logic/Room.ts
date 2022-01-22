@@ -119,10 +119,16 @@ export class Room {
     this._players.forEach((p, i) => p.setColor(i))
     this._turnStartTime = new Date()
     this._turnTimeout = setTimeout(() => {
-      this._players[this._currentPlayer].setBankrupt()
+      this._players[this._currentPlayer]?.setBankrupt()
       this.updatePlayers()
     }, config.secondsPerMove * 1000)
     this.update()
+  }
+
+  rollDices = () => {
+    const dices = rollTwoDices()
+
+    return dices
   }
 
   isEmpty = () => this._players.length === 0

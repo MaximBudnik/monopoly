@@ -7,6 +7,7 @@ import {getToken, verifyToken} from "./auth";
 import {chatHandler} from "./handlers/chat";
 import {startGameHandler} from "./handlers/startGame";
 import {RoomManager} from "./logic/RoomManager";
+import {rollDicesHandler} from "./handlers/rollDices";
 
 const cors = require('cors');
 
@@ -46,6 +47,7 @@ const onConnection = (socket) => {
   coreHandler(io, socket, roomManager);
   chatHandler(io, socket, roomManager);
   startGameHandler(io, socket, roomManager);
+  rollDicesHandler(io, socket, roomManager);
 }
 
 io.on("connection", onConnection);

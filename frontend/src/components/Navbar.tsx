@@ -22,7 +22,7 @@ export const Navbar: FC<Props> = (props) => {
         <PageHeader style={{background: 'white'}} title={<div>
             <Avatar.Group>
                 {players?.map(e => {
-                    return <Avatar shape={e.current ? 'square' : 'circle'} size={'large'}
+                    return <Avatar key={e.id} shape={e.current ? 'square' : 'circle'} size={'large'}
                                    style={{background: e.color, borderColor: e.color, border: e.bankrupt ? `4px dashed ${red[8]}` : `1px solid ${e.color}`}}
                                    src={<AvatarIcon value={e.username} size={32}/>}/>;
                 })}
