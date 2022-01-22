@@ -1,5 +1,6 @@
 import {Property} from "./Field/Property";
 import {TypedSocket, UserWithSocket} from "../types";
+import {playerColors} from "../constants/colors";
 
 export class Player {
   get id(): string {
@@ -30,4 +31,6 @@ export class Player {
       username: this._username
     }
   }
+
+  setColor = (id:number)=>this.color = playerColors?.[id] || '#fff'
 }

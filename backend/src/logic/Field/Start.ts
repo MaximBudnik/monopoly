@@ -1,10 +1,11 @@
-import {UserWithSocket} from "../../types";
 import {Card} from "./Card";
 import {Player} from "../Player";
+import {CardImages} from "../../constants/CardImages";
+import {CardNames} from "../../constants/CardNames";
 
 export class Start extends Card{
-  name = 'Start'
-  imgUrl = 'https://image.flaticon.com/icons/png/512/495/495468.png'
+  name = CardNames.start
+  imgUrl = CardImages[CardNames.start]
   onPlayerStop = (player: Player) =>{
     player.money+=300
   }

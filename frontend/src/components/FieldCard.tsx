@@ -49,7 +49,7 @@ export const FieldCard: FC<Props> = (props) => {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            backgroundColor: props.playerColor
+            backgroundColor: props.playerColor || 'white'
         }} onClick={() => props.onClick && props.onClick()}>
             <div style={{
                 backgroundColor: props.groupColor,

@@ -16,7 +16,7 @@ export type Message = {
 }
 
 export type CardPresentation = {
-  id: string,
+  id: number,
   name: string,
   imgUrl?: string,
   groupColor?: string
@@ -24,6 +24,7 @@ export type CardPresentation = {
   playerColor?: string
   players: Array<{ username: string, color: string }>
 }
+
 
 export type Field = Array<CardPresentation>
 
@@ -36,5 +37,6 @@ export type UserWithSocket = User & { socket: TypedSocket }
 export type TypedServer = Server<ClientToServerEvents, ServerToClientEvents, InterServerEvents, SocketData>
 
 export type Handler = (io: TypedServer, socket: SocketWithUser, roomManager:RoomManager) => void
+
 
 

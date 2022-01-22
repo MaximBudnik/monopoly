@@ -12,7 +12,7 @@ const Container = styled.div`
   height: 100vh;
   display: flex;
   flex-direction: row;
-  padding: 3px;
+  padding: 4px;
 `
 
 export const Room: FC<Props> = (props) => {

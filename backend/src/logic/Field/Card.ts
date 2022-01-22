@@ -1,17 +1,18 @@
 import {Player} from "../Player";
 import {CardPresentation} from "../../types";
+import {CardNames} from "../../constants/CardNames";
 
 export class Card {
-  readonly id: string
-  name: string
+  readonly id: number
+  name: CardNames
   imgUrl?: string //FIXME should be transfered to config, but I'm too lazy
 
   onPlayerStop = (player: Player) => {
 
   }
 
-  constructor(id:string|number) {
-    this.id = id.toString()
+  constructor(id:number) {
+    this.id = id
   }
 
   onPlayerPass: null | ((player:Player) =>void)
