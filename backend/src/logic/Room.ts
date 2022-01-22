@@ -1,4 +1,4 @@
-import {Field, User, UserWithSocket} from "../types";
+import {Field, PlayerPresentation, User, UserWithSocket} from "../types";
 import {shuffle} from "lodash";
 import {Player} from "./Player";
 import {Start} from "./Field/Start";
@@ -12,6 +12,9 @@ import {Tax} from "./Field/Tax";
 import {Jail} from "./Field/Jail";
 import {Casino} from "./Field/Casino";
 import {GoToJail} from "./Field/GoToJail";
+import {rollTwoDices} from "../utils/random";
+import {sendPlayersToRoom} from "../handlers/functions";
+import {config} from "../constants/config";
 
 export class Room {
 
@@ -19,7 +22,11 @@ export class Room {
   private _gameStartDate: Date | null = null
   readonly name: string
   private _cycles = 0
+  private _currentPlayer = 0
+  private _turnStartTime: Date
+  private _turnTimeout: NodeJS.Timeout
   private readonly sendFieldToRoom: (field: Field) => void
+  private readonly sendPlayersToRoom: (players: Array<PlayerPresentation>, turnStartTime: string) => void
   private _field: Array<Card> = [
     new Start(1),
     new Property(2, CardNames.bash, CardImages[CardNames.bash], PropertyGroups.script),
@@ -63,17 +70,25 @@ export class Room {
     new Property(40, CardNames.haskell, CardImages[CardNames.haskell], PropertyGroups.functional),
   ]
 
-  constructor(name: string, sendFieldToRoom: (field: Field) => void) {
+  constructor(name: string, sendFieldToRoom: (field: Field) => void, sendPlayersToRoom: (players: Array<PlayerPresentation>) => void) {
     this.name = name
     this.sendFieldToRoom = sendFieldToRoom
+    this.sendPlayersToRoom = sendPlayersToRoom
   }
 
   private updateField = () => {
     this.sendFieldToRoom(this._field.map(e => e.presentation))
   }
 
+  private updatePlayers = () => {
+    this.sendPlayersToRoom(this._players.map((e, idx) =>
+        e.getPlayerPresentation(idx === this._currentPlayer)),
+      this._turnStartTime.toString())
+  }
+
   private update = () => {
     this.updateField()
+    this.updatePlayers()
   }
 
   //TODO check if game is started to prevent new player join
@@ -101,7 +116,12 @@ export class Room {
     this._gameStartDate = new Date()
     this._players = shuffle(this._players)
     this._field[0].players = [...this._players]
-    this._players.forEach((p,i)=>p.setColor(i))
+    this._players.forEach((p, i) => p.setColor(i))
+    this._turnStartTime = new Date()
+    this._turnTimeout = setTimeout(() => {
+      this._players[this._currentPlayer].setBankrupt()
+      this.updatePlayers()
+    }, config.secondsPerMove * 1000)
     this.update()
   }
 

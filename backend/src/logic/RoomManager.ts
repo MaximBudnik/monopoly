@@ -1,5 +1,5 @@
 import {Room} from "./Room";
-import {sendFieldToRoom} from "../handlers/field";
+import {sendFieldToRoom, sendPlayersToRoom} from "../handlers/functions";
 import {TypedServer} from "../types";
 
 
@@ -22,7 +22,7 @@ export class RoomManager implements IRoomManager {
 
   createRoom = name => {
     if (this[name]) throw new Error('Room is already created')
-    this[name] = new Room(name, sendFieldToRoom(this._io, name))
+    this[name] = new Room(name, sendFieldToRoom(this._io, name), sendPlayersToRoom(this._io, name))
   };
 
   getRoom = name => this[name] as Room

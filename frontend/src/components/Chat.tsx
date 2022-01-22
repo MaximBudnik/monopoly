@@ -24,7 +24,7 @@ export const Chat: FC<Props> = () => {
         setText('')
     }
     return (
-        <div style={{width:'40rem'}}>
+        <div style={{width: '100%'}}>
             <Typography.Title level={5}>
                 Chat
             </Typography.Title>

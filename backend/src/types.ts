@@ -25,6 +25,13 @@ export type CardPresentation = {
   players: Array<{ username: string, color: string }>
 }
 
+export type PlayerPresentation = {
+  id: string
+  username: string,
+  color: string,
+  current: boolean
+  bankrupt: boolean
+}
 
 export type Field = Array<CardPresentation>
 

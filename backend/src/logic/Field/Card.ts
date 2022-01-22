@@ -24,7 +24,7 @@ export class Card {
       id: this.id,
       name: this.name,
       imgUrl: this.imgUrl,
-      players: this.players.map(e=>e.cardPresentation),
+      players: this.players.filter(p=>!p.bankrupt).map(e=>e.cardPresentation),
 
     }
   }

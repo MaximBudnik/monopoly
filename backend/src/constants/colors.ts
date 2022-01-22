@@ -9,10 +9,10 @@ export const PropertyGroupColor:Record<PropertyGroups, string> = {
   [PropertyGroups.database]: volcano.primary,
   [PropertyGroups.devops]: yellow.primary,
   [PropertyGroups.ide]: lime.primary,
-  [PropertyGroups.java]: green.primary,
+  [PropertyGroups.java]: purple.primary,
   [PropertyGroups.functional]: cyan.primary,
   [PropertyGroups.lowLevel]: blue.primary,
   [PropertyGroups.script]: geekblue.primary,
-  [PropertyGroups.versionControl]: purple.primary,
+  [PropertyGroups.versionControl]: green.primary,
   [PropertyGroups.web]: magenta.primary
 }

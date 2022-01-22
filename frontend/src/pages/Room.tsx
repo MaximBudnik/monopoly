@@ -5,6 +5,7 @@ import {Chat} from "../components/Chat";
 import {Navbar} from "../components/Navbar";
 import {Field} from "../components/Field";
 import styled from "styled-components";
+import {Tabs} from "antd";
 
 type Props = {}
 
@@ -13,6 +14,14 @@ const Container = styled.div`
   display: flex;
   flex-direction: row;
   padding: 4px;
+`
+
+const LeftContainer = styled.div`
+  margin-left: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex: 1;
 `
 
 export const Room: FC<Props> = (props) => {
@@ -32,10 +41,21 @@ export const Room: FC<Props> = (props) => {
                 <Field/>
 
             </div>
-            <div style={{marginLeft: '1rem'}}>
+            <LeftContainer>
                 <Navbar/>
+                <Tabs style={{flex:1}} defaultActiveKey="1">
+                    <Tabs.TabPane tab="Players" key="1">
+                        Content of Tab Pane 1
+                    </Tabs.TabPane>
+                    <Tabs.TabPane tab="Property overview" key="2">
+                        Content of Tab Pane 2
+                    </Tabs.TabPane>
+                    <Tabs.TabPane tab="Abilities" key="3">
+                        Content of Tab Pane 3
+                    </Tabs.TabPane>
+                </Tabs>
                 <Chat/>
-            </div>
+            </LeftContainer>
 
         </Container>
     )

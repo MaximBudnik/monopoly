@@ -60,7 +60,7 @@ export const FieldCard: FC<Props> = (props) => {
                 {props.price}
             </div>
             <Avatar.Group>
-                {props.players.map(e => <Avatar style={{background: e.color, borderColor: e.color}}
+                {props.players.map(e => <Avatar size={'large'} style={{background: e.color, borderColor: e.color}}
                                                 src={<AvatarIcon value={e.username} size={32}/>}/>)}
             </Avatar.Group>
         </div>
