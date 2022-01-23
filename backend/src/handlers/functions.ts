@@ -8,3 +8,7 @@ export const sendFieldToRoom = curry((io: TypedServer, room: string, field: Fiel
 export const sendPlayersToRoom = curry((io: TypedServer, room: string, players: Array<PlayerPresentation>, turnStartTime: string) => {
   io.to(room).emit('players', players, turnStartTime);
 })
+
+export const sendWinnerToRoom = curry((io: TypedServer, room: string, winner: string) => {
+  io.to(room).emit('winner', winner);
+})

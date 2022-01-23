@@ -8,12 +8,14 @@ export const usePlayers = () => {
     const [turnStartDate, setTurnStartDate] = useState<Date>()
 
     useEffect(() => {
-        subscribeToPlayers((f, turnStartTime) => {
-            setPlayers(f)
-            setTurnStartDate(new Date(turnStartTime))
-        })
-        return unsubscribeToPlayers
-    }, [])
+        subscribeToPlayers(subscriber)
 
+        function subscriber(players: Array<PlayerPresentation>, turnStartTime: string) {
+            setPlayers(players)
+            setTurnStartDate(new Date(turnStartTime))
+        }
+
+        return () => unsubscribeToPlayers(subscriber)
+    }, [])
     return {players, turnStartDate, meIsCurrent: players.find(e => e.current)?.id === sessionStorage.getItem('id')}
 }

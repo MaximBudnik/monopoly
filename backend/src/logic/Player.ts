@@ -16,6 +16,7 @@ export class Player {
 
   money: number
   private propetries: Array<Property> = []
+  position: number = 0
   color: string
   private _bankrupt: boolean = false
   private readonly _username: string

@@ -1,9 +1,11 @@
-import {FC} from "react";
+import {FC, useEffect, useState} from "react";
 import {useField} from "../hooks/useField";
 import {FieldCard, Orientation} from "./FieldCard";
 import styled from "styled-components";
 import {geekblue, lime, magenta, red} from "@ant-design/colors";
 import {DiceRoller} from "./DiceRoller";
+import {CardPresentation, Field as FieldT} from "../../../backend/src/types";
+import {Alert, Spin} from "antd";
 
 type Props = {}
 
@@ -33,13 +35,35 @@ const Grid = styled.div`
 
 export const Field: FC<Props> = (props) => {
     const {field} = useField()
+
+    const [delayedField, setDelayedField] = useState<FieldT>()
     console.log(field)
+    useEffect(()=>{
+        if(!delayedField){
+            setDelayedField(field)
+            return
+        }
+        setTimeout(()=>setDelayedField(field),1250)
+    },[field])
+
+    if(!delayedField){
+        return (
+            <div style={{display: "flex", alignItems: 'center', justifyContent: 'center', height: '100%'}}>
+                <div>
+                    <Spin size={'large'} tip="Start game to see field...">
+                    </Spin>
+                </div>
+            </div>
+        )
+    }
+
+
     return (
         <Grid>
             <div style={{gridArea: 'a0'}}>
                 <DiceRoller/>
             </div>
-            {field?.map((card, i) => {
+            {delayedField?.map((card, i) => {
                 let orientation: Orientation
                 let idx = i + 1
                 if (card.id >= 2 && card.id  <= 10) orientation = 'bottom'

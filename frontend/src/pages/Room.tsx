@@ -6,6 +6,7 @@ import {Navbar} from "../components/Navbar";
 import {Field} from "../components/Field";
 import styled from "styled-components";
 import {Tabs} from "antd";
+import {WinnerModal} from "../components/WinnerModal";
 
 type Props = {}
 
@@ -56,7 +57,7 @@ export const Room: FC<Props> = (props) => {
                 </Tabs>
                 <Chat/>
             </LeftContainer>
-
+            <WinnerModal/>
         </Container>
     )
 }

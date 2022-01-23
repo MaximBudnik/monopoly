@@ -8,6 +8,7 @@ export interface ServerToClientEvents {
   field: (field: Field) => void
   players: (players:Array<PlayerPresentation>,  turnStartTime: string) => void
   rollDices: (dices:[number,number])=>void
+  winner: (username:string)=>void
 }
 
 export interface ClientToServerEvents {

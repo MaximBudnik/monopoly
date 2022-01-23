@@ -1,5 +1,5 @@
 import {Room} from "./Room";
-import {sendFieldToRoom, sendPlayersToRoom} from "../handlers/functions";
+import {sendFieldToRoom, sendPlayersToRoom, sendWinnerToRoom} from "../handlers/functions";
 import {TypedServer} from "../types";
 
 
@@ -22,10 +22,17 @@ export class RoomManager implements IRoomManager {
 
   createRoom = name => {
     if (this[name]) throw new Error('Room is already created')
-    this[name] = new Room(name, sendFieldToRoom(this._io, name), sendPlayersToRoom(this._io, name))
+    this[name] = new Room(name,
+      sendFieldToRoom(this._io, name),
+      sendPlayersToRoom(this._io, name),
+      sendWinnerToRoom(this._io, name),
+      () => this.deleteRoom(name))
   };
 
   getRoom = name => this[name] as Room
 
-  deleteRoom = name => this[name] = undefined
+  deleteRoom = name => {
+    this._io.in(name).socketsLeave(name)
+    return this[name] = undefined;
+  }
 }

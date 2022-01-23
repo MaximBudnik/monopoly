@@ -1,12 +1,14 @@
 import {CardPresentation, Field, PlayerPresentation} from "../../../backend/src/types";
 import {getSocket} from "./core";
 
-export const subscribeToPlayers = (cb: (players: Array<PlayerPresentation>, turnStartTime:string) => void) => {
+export const subscribeToPlayers = (cb: PlayersSubscriber) => {
     getSocket().on('players', (players, turnStartTime) => {
         return cb(players, turnStartTime);
     });
 }
 
-export const unsubscribeToPlayers= () => {
-    getSocket().off('players')
+export type PlayersSubscriber = (players: Array<PlayerPresentation>, turnStartTime:string) => void
+
+export const unsubscribeToPlayers= (f:PlayersSubscriber) => {
+    getSocket().off('players',f)
 }

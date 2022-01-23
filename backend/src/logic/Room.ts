@@ -16,6 +16,7 @@ import {rollTwoDices} from "../utils/random";
 import {sendPlayersToRoom} from "../handlers/functions";
 import {config} from "../constants/config";
 
+//FIXME split class in 2 or 3 (Room, Field, PlayerManger)
 export class Room {
 
   private _players: Array<Player> = []
@@ -26,7 +27,9 @@ export class Room {
   private _turnStartTime: Date
   private _turnTimeout: NodeJS.Timeout
   private readonly sendFieldToRoom: (field: Field) => void
+  private readonly sendWinnerToRoom: (winner: string) => void
   private readonly sendPlayersToRoom: (players: Array<PlayerPresentation>, turnStartTime: string) => void
+  private readonly deleteRoom:Function
   private _field: Array<Card> = [
     new Start(1),
     new Property(2, CardNames.bash, CardImages[CardNames.bash], PropertyGroups.script),
@@ -69,11 +72,16 @@ export class Room {
     new Tax(39),
     new Property(40, CardNames.haskell, CardImages[CardNames.haskell], PropertyGroups.functional),
   ]
-
-  constructor(name: string, sendFieldToRoom: (field: Field) => void, sendPlayersToRoom: (players: Array<PlayerPresentation>) => void) {
+  //FIXME use di container
+  constructor(name: string, sendFieldToRoom: (field: Field) => void,
+              sendPlayersToRoom: (players: Array<PlayerPresentation>) => void,
+              sendWinnerToRoom: (winner: string) => void,
+              deleteRoom: Function) {
     this.name = name
     this.sendFieldToRoom = sendFieldToRoom
     this.sendPlayersToRoom = sendPlayersToRoom
+    this.sendWinnerToRoom = sendWinnerToRoom
+    this.deleteRoom = deleteRoom
   }
 
   private updateField = () => {
@@ -105,6 +113,10 @@ export class Room {
   }
 
   joinUser = (user: UserWithSocket) => {
+    const duplicatePlayerIndex = this._players.findIndex(e => e.id === user.id)
+    if (duplicatePlayerIndex > -1) {
+      this._players.splice(duplicatePlayerIndex, 1)
+    }
     this._players.push(new Player(user))
   }
 
@@ -115,20 +127,76 @@ export class Room {
   startGame = () => {
     this._gameStartDate = new Date()
     this._players = shuffle(this._players)
-    this._field[0].players = [...this._players]
+    this._players.find(p => this._field[0].addPlayer(p))
     this._players.forEach((p, i) => p.setColor(i))
+    this.setTurnTimeout()
+    this.update()
+    this.update()
+  }
+
+  private setTurnTimeout = () => {
+    clearTimeout(this._turnTimeout)
     this._turnStartTime = new Date()
     this._turnTimeout = setTimeout(() => {
       this._players[this._currentPlayer]?.setBankrupt()
-      this.updatePlayers()
+      this.endPlayerTurn()
     }, config.secondsPerMove * 1000)
-    this.update()
   }
 
   rollDices = () => {
     const dices = rollTwoDices()
-
+    this.moveCurrentPlayer(dices[0] + dices[1])
     return dices
+  }
+
+  playerHasAccess = (playerId: string) => this.getCurrentPlayer().id === playerId
+
+  private getCurrentPlayer = () => this._players[this._currentPlayer]
+
+  private moveCurrentPlayer = (value: number) => {
+    const player = this.getCurrentPlayer()
+    const position = player.position
+    this._field[position].removePlayer(player)
+    let currentPosition = position + 1
+    let finishValue = position + value
+    for (currentPosition; currentPosition < finishValue; currentPosition++) {
+      if (currentPosition === this._field.length) {
+        finishValue = finishValue - currentPosition
+        currentPosition = 0;
+      }
+      this._field[currentPosition].onPlayerPass(player)
+    }
+    if (currentPosition === this._field.length) currentPosition = 0
+    this._field[currentPosition].onPlayerStop(player)
+    player.position = currentPosition
+    this.update()
+    this.endPlayerTurn()
+  }
+
+  endPlayerTurn = () => {
+    let nextPlayer = null
+    for (let i = this._currentPlayer + 1; i < this._players.length; i++) {
+      if (!this._players[i].bankrupt) {
+        nextPlayer = i
+        break
+      }
+    }
+    if (nextPlayer === null) {
+      for (let i = 0; i < this._currentPlayer; i++) {
+        if (!this._players[i].bankrupt) {
+          nextPlayer = i
+          break
+        }
+      }
+    }
+    if (nextPlayer === null) {
+      this.sendWinnerToRoom(this.getCurrentPlayer().username)
+      this.deleteRoom()
+    } else {
+      this._currentPlayer = nextPlayer
+      this.setTurnTimeout()
+      this.update()
+    }
   }
 
   isEmpty = () => this._players.length === 0

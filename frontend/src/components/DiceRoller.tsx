@@ -16,12 +16,11 @@ const Container = styled.div`
 `
 
 export const DiceRoller: FC<Props> = (props) => {
-    const {meIsCurrent} = usePlayers()
+    const {meIsCurrent, players, turnStartDate} = usePlayers()
     const {rollDices, dices} = useRollDices()
     const [rolled, setRolled] = useState(false)
     const ref1 = useRef(null)
     const ref2 = useRef(null)
-    console.log(dices)
 
     useEffect(() => {
         // @ts-ignore
@@ -32,7 +31,7 @@ export const DiceRoller: FC<Props> = (props) => {
 
     useEffect(()=>{
         setRolled(false)
-    },[meIsCurrent])
+    },[meIsCurrent,turnStartDate])
 
     const onRoll = () => {
         rollDices()
