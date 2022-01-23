@@ -15,7 +15,7 @@ export const WinnerModal: FC<Props> = (props) => {
         navigate(routes.lobby)
     }
     return (
-        <Modal title="Winner" visible={Boolean(winner)} onOk={onModalClose}>
+        <Modal title="Winner" visible={Boolean(winner)} onOk={onModalClose} onCancel={onModalClose}>
             <div style={{display: "flex", alignItems: 'center', justifyContent: 'center'}}>
                 <Avatar size={'large'}
                         style={{width: 64, height: 64}}

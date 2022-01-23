@@ -16,7 +16,7 @@ import {rollTwoDices} from "../utils/random";
 import {sendPlayersToRoom} from "../handlers/functions";
 import {config} from "../constants/config";
 
-//FIXME split class in 2 or 3 (Room, Field, PlayerManger)
+//FIXME split class in 2 or 3 (Room, Field, PlayerTurnManger)
 export class Room {
 
   private _players: Array<Player> = []
@@ -29,7 +29,7 @@ export class Room {
   private readonly sendFieldToRoom: (field: Field) => void
   private readonly sendWinnerToRoom: (winner: string) => void
   private readonly sendPlayersToRoom: (players: Array<PlayerPresentation>, turnStartTime: string) => void
-  private readonly deleteRoom:Function
+  private readonly deleteRoom: Function
   private _field: Array<Card> = [
     new Start(1),
     new Property(2, CardNames.bash, CardImages[CardNames.bash], PropertyGroups.script),
@@ -72,6 +72,7 @@ export class Room {
     new Tax(39),
     new Property(40, CardNames.haskell, CardImages[CardNames.haskell], PropertyGroups.functional),
   ]
+
   //FIXME use di container
   constructor(name: string, sendFieldToRoom: (field: Field) => void,
               sendPlayersToRoom: (players: Array<PlayerPresentation>) => void,
@@ -145,7 +146,7 @@ export class Room {
 
   rollDices = () => {
     const dices = rollTwoDices()
-    this.moveCurrentPlayer(dices[0] + dices[1])
+    this.moveCurrentPlayer(dices)
     return dices
   }
 
@@ -153,12 +154,12 @@ export class Room {
 
   private getCurrentPlayer = () => this._players[this._currentPlayer]
 
-  private moveCurrentPlayer = (value: number) => {
+  private moveCurrentPlayer = (dices: [number, number]) => {
     const player = this.getCurrentPlayer()
     const position = player.position
     this._field[position].removePlayer(player)
     let currentPosition = position + 1
-    let finishValue = position + value
+    let finishValue = position + dices[0] + dices[1]
     for (currentPosition; currentPosition < finishValue; currentPosition++) {
       if (currentPosition === this._field.length) {
         finishValue = finishValue - currentPosition
@@ -170,15 +171,29 @@ export class Room {
     this._field[currentPosition].onPlayerStop(player)
     player.position = currentPosition
     this.update()
-    this.endPlayerTurn()
+    if (dices[0] === dices[1]) {
+      this._doublesInRowCount++
+      if (this._doublesInRowCount === 3) {
+        //  TODO move player in prison
+        this.endPlayerTurn()
+      }
+      this.endPlayerTurn(this._currentPlayer)
+    } else {
+      this._doublesInRowCount = 0
+      this.endPlayerTurn()
+    }
   }
 
-  endPlayerTurn = () => {
-    let nextPlayer = null
-    for (let i = this._currentPlayer + 1; i < this._players.length; i++) {
-      if (!this._players[i].bankrupt) {
-        nextPlayer = i
-        break
+  private _doublesInRowCount = 0
+
+  endPlayerTurn = (_nextPlayer = null) => {
+    let nextPlayer = _nextPlayer
+    if (nextPlayer === null) {
+      for (let i = this._currentPlayer + 1; i < this._players.length; i++) {
+        if (!this._players[i].bankrupt) {
+          nextPlayer = i
+          break
+        }
       }
     }
     if (nextPlayer === null) {
