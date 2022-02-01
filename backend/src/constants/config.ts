@@ -1,5 +1,5 @@
 export const config = {
   jwtSecret: 'secret',
   gameDuration: 45, //min
-  secondsPerMove: 60
+  secondsPerMove: 600
 }

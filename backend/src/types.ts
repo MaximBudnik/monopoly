@@ -33,6 +33,27 @@ export type PlayerPresentation = {
   bankrupt: boolean
 }
 
+export type GeneralPresentation = {
+  balance: number;
+  taxesToPay: number
+  moneyPerCircle: number;
+  moneyPerTurn: number;
+}
+
+export type PlayerDiplomacyPresentation = {
+
+}
+
+export type AbilitiesPresentation = {
+
+}
+
+export type PropertyPresentation = {
+  owner: string | null
+  price: string
+  id: string
+}
+
 export type Field = Array<CardPresentation>
 
 export type TypedSocket = Socket<ClientToServerEvents, ServerToClientEvents, InterServerEvents, SocketData>

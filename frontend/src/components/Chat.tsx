@@ -28,7 +28,7 @@ export const Chat: FC<Props> = () => {
             <Typography.Title level={5}>
                 Chat
             </Typography.Title>
-            <div style={{maxHeight: '20rem', overflowY: 'scroll'}}>
+            <div style={{maxHeight: '14rem', overflowY: 'scroll'}}>
                 <List
                     dataSource={messages}
                     itemLayout="horizontal"

@@ -92,7 +92,7 @@ export class Room {
   private updatePlayers = () => {
     this.sendPlayersToRoom(this._players.map((e, idx) =>
         e.getPlayerPresentation(idx === this._currentPlayer)),
-      this._turnStartTime.toString())
+      this._turnStartTime?.toString() || '')
   }
 
   private update = () => {
@@ -119,6 +119,7 @@ export class Room {
       this._players.splice(duplicatePlayerIndex, 1)
     }
     this._players.push(new Player(user))
+    this.updatePlayers()
   }
 
   removeUser = (user: User) => {
@@ -205,7 +206,7 @@ export class Room {
       }
     }
     if (nextPlayer === null) {
-      this.sendWinnerToRoom(this.getCurrentPlayer().username)
+      this.getCurrentPlayer() && this.sendWinnerToRoom(this.getCurrentPlayer().username)
       this.deleteRoom()
     } else {
       this._currentPlayer = nextPlayer

@@ -7,6 +7,7 @@ import {Field} from "../components/Field";
 import styled from "styled-components";
 import {Tabs} from "antd";
 import {WinnerModal} from "../components/WinnerModal";
+import {General} from "../components/Tabs/General";
 
 type Props = {}
 
@@ -38,20 +39,23 @@ export const Room: FC<Props> = (props) => {
 
     return (
         <Container>
-            <div style={{width: '100vh'}}>
+            <div style={{width: '100vh', minWidth: '100vh'}}>
                 <Field/>
 
             </div>
             <LeftContainer>
                 <Navbar/>
                 <Tabs style={{flex:1}} defaultActiveKey="1">
-                    <Tabs.TabPane tab="Players" key="1">
+                    <Tabs.TabPane tab="General" key="1">
+                       <General/>
+                    </Tabs.TabPane>
+                    <Tabs.TabPane tab="Players" key="2">
                         Content of Tab Pane 1
                     </Tabs.TabPane>
-                    <Tabs.TabPane tab="Property overview" key="2">
+                    <Tabs.TabPane tab="Property overview" key="3">
                         Content of Tab Pane 2
                     </Tabs.TabPane>
-                    <Tabs.TabPane tab="Abilities" key="3">
+                    <Tabs.TabPane tab="Abilities" key="4">
                         Content of Tab Pane 3
                     </Tabs.TabPane>
                 </Tabs>
